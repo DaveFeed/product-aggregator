@@ -1,0 +1,1222 @@
+{
+    "Աղցան": {
+        "en": "Salad",
+        "unified": "Fruits & Vegetables"
+    },
+    "Թարմ միս": {
+        "en": "Fresh meat",
+        "unified": "Meat & Poultry"
+    },
+    "Պահածոյացված մթերք": {
+        "en": "Canned food",
+        "unified": "Other"
+    },
+    "Մսամթերք": {
+        "en": "Meat products",
+        "unified": "Meat & Poultry"
+    },
+    "Ըմպելիք": {
+        "en": "A drink",
+        "unified": "Beverages"
+    },
+    "Կարկանդակ": {
+        "en": "A pie",
+        "unified": "Other"
+    },
+    "Կիսաֆաբրիկատ": {
+        "en": "Semi-finished product",
+        "unified": "Other"
+    },
+    "Քաղցրավենիք": {
+        "en": "Sweets",
+        "unified": "Other"
+    },
+    "Թթու": {
+        "en": "Sour",
+        "unified": "Other"
+    },
+    "Սենդվիչ": {
+        "en": "A sandwich",
+        "unified": "Other"
+    },
+    "Միրգ": {
+        "en": "Fruit",
+        "unified": "Fruits & Vegetables"
+    },
+    "Հատապտուղ": {
+        "en": "Berry",
+        "unified": "Other"
+    },
+    "Էկզոտիկ միրգ": {
+        "en": "Exotic fruit",
+        "unified": "Fruits & Vegetables"
+    },
+    "Բանջարեղեն": {
+        "en": "Vegetables",
+        "unified": "Fruits & Vegetables"
+    },
+    "Կանաչի": {
+        "en": "Green",
+        "unified": "Other"
+    },
+    "Հայկական պանիր": {
+        "en": "Armenian cheese",
+        "unified": "Dairy & Eggs"
+    },
+    "Ներմուծված պանիր": {
+        "en": "Imported cheese",
+        "unified": "Dairy & Eggs"
+    },
+    "Կարագ, մարգարին": {
+        "en": "Butter, margarine",
+        "unified": "Other"
+    },
+    "Կաթ": {
+        "en": "Milk",
+        "unified": "Dairy & Eggs"
+    },
+    "Ոչ կաթնային ըմպելիք": {
+        "en": "A non-dairy drink",
+        "unified": "Dairy & Eggs"
+    },
+    "Խտացրած կաթ": {
+        "en": "Condensed milk",
+        "unified": "Dairy & Eggs"
+    },
+    "Կեֆիր": {
+        "en": "Kefir",
+        "unified": "Other"
+    },
+    "Թան, մածնաբրդոշ": {
+        "en": "Tan, inkjet",
+        "unified": "Other"
+    },
+    "Մածուն": {
+        "en": "Yogurt",
+        "unified": "Dairy & Eggs"
+    },
+    "Թթվասեր": {
+        "en": "Acidic",
+        "unified": "Other"
+    },
+    "Ձու": {
+        "en": "Egg",
+        "unified": "Other"
+    },
+    "Կաթնաշոռային արտադրանք": {
+        "en": "Cottage cheese products",
+        "unified": "Dairy & Eggs"
+    },
+    "Յոգուրտ, սերուցք": {
+        "en": "Yogurt, cream",
+        "unified": "Dairy & Eggs"
+    },
+    "Ռեժան, կաթի սեր": {
+        "en": "Regan, love of milk",
+        "unified": "Dairy & Eggs"
+    },
+    "Հաց": {
+        "en": "Bread",
+        "unified": "Bakery"
+    },
+    "Լավաշ": {
+        "en": "Lavash",
+        "unified": "Other"
+    },
+    "Բուլկի": {
+        "en": "Bun",
+        "unified": "Other"
+    },
+    "Խաչապուրի": {
+        "en": "Khachapuri",
+        "unified": "Other"
+    },
+    "Գաթա": {
+        "en": "Gatha",
+        "unified": "Other"
+    },
+    "Դոնաթ": {
+        "en": "Donut",
+        "unified": "Other"
+    },
+    "Կրուասան": {
+        "en": "Croissant",
+        "unified": "Other"
+    },
+    "Տավարի միս": {
+        "en": "Beef",
+        "unified": "Meat & Poultry"
+    },
+    "Խոզի միս": {
+        "en": "Pork",
+        "unified": "Meat & Poultry"
+    },
+    "Գառան միս": {
+        "en": "Lamb meat",
+        "unified": "Meat & Poultry"
+    },
+    "Հավի միս, ճուտ": {
+        "en": "Chicken, chicken",
+        "unified": "Meat & Poultry"
+    },
+    "Կենդանի ձուկ, խեցգետին": {
+        "en": "Live fish, crab",
+        "unified": "Other"
+    },
+    "Ծովամթերք": {
+        "en": "Seafood",
+        "unified": "Other"
+    },
+    "Ապխտած ձուկ": {
+        "en": "Smoked fish",
+        "unified": "Other"
+    },
+    "Պահածոներ": {
+        "en": "Canned foods",
+        "unified": "Other"
+    },
+    "Սառեցված ձուկ": {
+        "en": "Frozen fish",
+        "unified": "Other"
+    },
+    "Ձկնկիթ": {
+        "en": "Fishing rod",
+        "unified": "Other"
+    },
+    "Ձկնային պահածո": {
+        "en": "Canned fish",
+        "unified": "Other"
+    },
+    "Չորացրած ձուկ": {
+        "en": "Dried fish",
+        "unified": "Other"
+    },
+    "Եփած մսամթերք": {
+        "en": "Boiled meat products",
+        "unified": "Meat & Poultry"
+    },
+    "Ապխտած մսամթերք": {
+        "en": "Smoked meat products",
+        "unified": "Meat & Poultry"
+    },
+    "Բաստուրմա, սուջուխ": {
+        "en": "Basturma, sujukh",
+        "unified": "Other"
+    },
+    "Մսային դելիկատես": {
+        "en": "Meat delicacy",
+        "unified": "Meat & Poultry"
+    },
+    "Կտրտած մսամթերք": {
+        "en": "Sliced meat",
+        "unified": "Meat & Poultry"
+    },
+    "Ձավարեղեն": {
+        "en": "Cereals",
+        "unified": "Other"
+    },
+    "Լոբազգիներ և բրինձ": {
+        "en": "Legumes and rice",
+        "unified": "Other"
+    },
+    "Ալյուր": {
+        "en": "Flour",
+        "unified": "Other"
+    },
+    "Համեմունք": {
+        "en": "Seasoning",
+        "unified": "Other"
+    },
+    "Շաքարավազ, աղ, սոդա": {
+        "en": "Sugar, salt, soda",
+        "unified": "Other"
+    },
+    "Սնկային պահածո": {
+        "en": "Canned mushrooms",
+        "unified": "Other"
+    },
+    "Բանջարեղենային պահածո": {
+        "en": "Canned vegetables",
+        "unified": "Fruits & Vegetables"
+    },
+    "Տոմատի մածուկ": {
+        "en": "Tomato paste",
+        "unified": "Other"
+    },
+    "Ձիթապտուղ": {
+        "en": "Olive",
+        "unified": "Other"
+    },
+    "Մսային պահածո, պաշտետ": {
+        "en": "Canned meat, pate",
+        "unified": "Meat & Poultry"
+    },
+    "Մրգային պահածո և մեղր": {
+        "en": "Canned fruit and honey",
+        "unified": "Fruits & Vegetables"
+    },
+    "Այլ": {
+        "en": "Other:",
+        "unified": "Other"
+    },
+    "Մակարոն": {
+        "en": "Pasta",
+        "unified": "Other"
+    },
+    "Վերմիշել, լապշա": {
+        "en": "Vermicelli, noodles",
+        "unified": "Other"
+    },
+    "Սպագետի": {
+        "en": "Spaghetti",
+        "unified": "Other"
+    },
+    "Լազանյա, կանելոնի": {
+        "en": "Lasagna, cannelloni",
+        "unified": "Other"
+    },
+    "Արիշտա, թաթար-բորակի": {
+        "en": "Noodles, Tatar-boraki",
+        "unified": "Other"
+    },
+    "Թռչնամիս": {
+        "en": "Poultry",
+        "unified": "Other"
+    },
+    "Ձուկ, ծովամթերք": {
+        "en": "Fish, seafood",
+        "unified": "Other"
+    },
+    "Սառույց": {
+        "en": "Ice",
+        "unified": "Other"
+    },
+    "Սառեցված բանջարեղեն, միրգ, հատապտուղ": {
+        "en": "Frozen vegetables, fruit, berries",
+        "unified": "Fruits & Vegetables"
+    },
+    "Պաղպաղակ": {
+        "en": "Ice cream",
+        "unified": "Other"
+    },
+    "Խաշ": {
+        "en": "Thick",
+        "unified": "Other"
+    },
+    "Ձեթ": {
+        "en": "Oil",
+        "unified": "Other"
+    },
+    "Յուղ": {
+        "en": "Oil",
+        "unified": "Other"
+    },
+    "Քացախ": {
+        "en": "Vinegar",
+        "unified": "Other"
+    },
+    "Կետչուպ": {
+        "en": "Ketchup",
+        "unified": "Other"
+    },
+    "Սոուս, օշարակ": {
+        "en": "Sauce, syrup",
+        "unified": "Other"
+    },
+    "Մայոնեզ": {
+        "en": "Mayonnaise",
+        "unified": "Other"
+    },
+    "Մանանեխ, ծովաբողկ, չաման": {
+        "en": "Mustard, horseradish, cumin",
+        "unified": "Other"
+    },
+    "Սուրճ": {
+        "en": "Coffee",
+        "unified": "Other"
+    },
+    "Թեյ": {
+        "en": "Tea",
+        "unified": "Other"
+    },
+    "Առանց ծուխ արտադրանք և աքսեսուար": {
+        "en": "Smoke free products and accessories",
+        "unified": "Other"
+    },
+    "Սիգար, սիգարիլա, թութուն": {
+        "en": "Cigar, cigarilla, tobacco",
+        "unified": "Other"
+    },
+    "Ծխախոտ": {
+        "en": "Cigarette",
+        "unified": "Other"
+    },
+    "Կրակայրիչ, աքսեսուար": {
+        "en": "Lighter, accessory",
+        "unified": "Other"
+    },
+    "Էլեկտրական ծխախոտ": {
+        "en": "Electric cigarette",
+        "unified": "Other"
+    },
+    "Գինի": {
+        "en": "Wine",
+        "unified": "Other"
+    },
+    "Վերմուտ": {
+        "en": "Vermouth",
+        "unified": "Other"
+    },
+    "Շամպայն, փրփրուն գինի": {
+        "en": "Champagne, sparkling wine",
+        "unified": "Other"
+    },
+    "Կոնյակ, բրենդի": {
+        "en": "Cognac, brandy",
+        "unified": "Other"
+    },
+    "Վիսկի": {
+        "en": "Whiskey",
+        "unified": "Other"
+    },
+    "Օղի": {
+        "en": "Vodka",
+        "unified": "Other"
+    },
+    "Ռոմ, տեկիլա, մեսկալ": {
+        "en": "Rum, tequila, mezcal",
+        "unified": "Other"
+    },
+    "Ջին, աբսենտ": {
+        "en": "Gin, absinthe",
+        "unified": "Other"
+    },
+    "Լիկյոր": {
+        "en": "Liquor",
+        "unified": "Other"
+    },
+    "Ապերիտիվ, գրապպա, պորտվեյն, սանգրիա, շնապս": {
+        "en": "Aperitif, grappa, port wine, sangria, schnapps",
+        "unified": "Other"
+    },
+    "Հայկական գարեջուր": {
+        "en": "Armenian beer",
+        "unified": "Other"
+    },
+    "Ներմուծված գարեջուր": {
+        "en": "Imported beer",
+        "unified": "Other"
+    },
+    "Ամեն ինչ գարեջրի համար": {
+        "en": "Anything for beer",
+        "unified": "Other"
+    },
+    "Ըմպելիքներ": {
+        "en": "Drinks",
+        "unified": "Beverages"
+    },
+    "Կոկտեյլ, էներգետիկ ըմպելիք, թույլ ալկոհոլային խմիչք": {
+        "en": "Cocktail, energy drink, soft drink",
+        "unified": "Beverages"
+    },
+    "Խմորեղեն": {
+        "en": "Pastries",
+        "unified": "Other"
+    },
+    "Տորթ": {
+        "en": "A cake",
+        "unified": "Other"
+    },
+    "Դոնդող, պաստեղ, մարմելադ": {
+        "en": "Jelly, paste, marmalade",
+        "unified": "Other"
+    },
+    "Տորթ, ռուլետ": {
+        "en": "Cake, roll",
+        "unified": "Other"
+    },
+    "Վաֆլի": {
+        "en": "Waffle",
+        "unified": "Other"
+    },
+    "Արևելյան քաղցրավենիք": {
+        "en": "Oriental sweets",
+        "unified": "Other"
+    },
+    "Կեքս, կրուասան": {
+        "en": "Muffin, croissant",
+        "unified": "Other"
+    },
+    "Աղանդեր, բիսկվիթ": {
+        "en": "Desserts, biscuit",
+        "unified": "Other"
+    },
+    "Թխվածքաբլիթ, քաղցրաբլիթ, օղաբլիթ": {
+        "en": "Biscuits, sweet biscuits, vodka biscuits",
+        "unified": "Other"
+    },
+    "Կրեկեր, ձողիկ": {
+        "en": "Cracker, stick",
+        "unified": "Other"
+    },
+    "Կոնֆետ": {
+        "en": "Candy",
+        "unified": "Other"
+    },
+    "Սալիկ, բատոն և կրեմ": {
+        "en": "Bar, bar and cream",
+        "unified": "Other"
+    },
+    "Դրաժե, սառնաշաքար": {
+        "en": "Dragee, lollipop",
+        "unified": "Other"
+    },
+    "Մաստակ": {
+        "en": "Chewing gum",
+        "unified": "Other"
+    },
+    "Մաստակ-կոնֆետ": {
+        "en": "Chewing gum",
+        "unified": "Other"
+    },
+    "Չիր, չամիչ": {
+        "en": "Dry, raisin",
+        "unified": "Other"
+    },
+    "Չարազ, քաղցր սուջուխ, թթու լավաշ": {
+        "en": "Charaz, sweet sujukh, sour lavash",
+        "unified": "Other"
+    },
+    "Չիպս": {
+        "en": "Chips",
+        "unified": "Snacks"
+    },
+    "Արևածաղկի սերմ": {
+        "en": "Sunflower seed",
+        "unified": "Other"
+    },
+    "Եգիպտացորենային արտադրանք, քաղցր բամբակ": {
+        "en": "Corn products, sweet cotton",
+        "unified": "Other"
+    },
+    "Աղանձ, կանեփ": {
+        "en": "Candy, hemp",
+        "unified": "Other"
+    },
+    "Կաթնային խառնուրդ": {
+        "en": "Milk mixture",
+        "unified": "Dairy & Eggs"
+    },
+    "Շիլա, պուդինգ": {
+        "en": "Porridge, pudding",
+        "unified": "Other"
+    },
+    "Թխվածքաբլիթ, խյուս": {
+        "en": "Biscuits, puree",
+        "unified": "Other"
+    },
+    "Հյութ, թեյ": {
+        "en": "Juice, tea",
+        "unified": "Beverages"
+    },
+    "Արագ պատրաստվող մթերք": {
+        "en": "Quick food",
+        "unified": "Other"
+    },
+    "Պատրաստի նախաճաշ, փաթիլ": {
+        "en": "Ready breakfast, flake",
+        "unified": "Other"
+    },
+    "Շաքար, շաքարի փոխարինիչ": {
+        "en": "Sugar, sugar substitute",
+        "unified": "Other"
+    },
+    "Նպարեղեն": {
+        "en": "Groceries",
+        "unified": "Other"
+    },
+    "Քաղցրավենիք, աղանդեր": {
+        "en": "Sweets, desserts",
+        "unified": "Other"
+    },
+    "Հյութ և ըմպելիք": {
+        "en": "Juice and drink",
+        "unified": "Beverages"
+    },
+    "Նպարեղեն, ձու": {
+        "en": "Groceries, eggs",
+        "unified": "Other"
+    },
+    "Շան կեր": {
+        "en": "Dog food",
+        "unified": "Other"
+    },
+    "Կատվի կեր, հիգիենիկ լցանյութ": {
+        "en": "Cat food, hygienic filler",
+        "unified": "Other"
+    },
+    "Սպասք լվացող մեքենայի միջոց": {
+        "en": "Dishwasher detergent",
+        "unified": "Other"
+    },
+    "Սպասք լվանալու միջոց": {
+        "en": "Dishwashing liquid",
+        "unified": "Other"
+    },
+    "Լվացքի փոշի, գել, հաբ": {
+        "en": "Washing powder, gel, pill",
+        "unified": "Other"
+    },
+    "Փափկեցնող, սպիտակեցնող, լաքահանող միջոց, հակաստատիկ": {
+        "en": "Softener, bleach, stain remover, antistatic",
+        "unified": "Other"
+    },
+    "Լվացքի ամրակ և պարան": {
+        "en": "Clothesline and rope",
+        "unified": "Other"
+    },
+    "Սանհանգույցի համար": {
+        "en": "For the bathroom",
+        "unified": "Other"
+    },
+    "Խոհանոցի համար": {
+        "en": "For the kitchen",
+        "unified": "Other"
+    },
+    "Կահույքի, ապակու, հատակի համար": {
+        "en": "For furniture, glass, floor",
+        "unified": "Other"
+    },
+    "Բուրավետիչ": {
+        "en": "Flavoring",
+        "unified": "Other"
+    },
+    "Ռետինե ձեռնոց, կտոր": {
+        "en": "Rubber glove, cloth",
+        "unified": "Other"
+    },
+    "Մաքրման պարագա": {
+        "en": "Cleaning supplies",
+        "unified": "Other"
+    },
+    "Աղբի տոպրակ, աղբաման": {
+        "en": "Garbage bag, trash can",
+        "unified": "Other"
+    },
+    "Սննդի թաղանթ, փայլաթիթեղ, թխման թուղթ": {
+        "en": "Food film, foil, baking paper",
+        "unified": "Other"
+    },
+    "Շամպուն": {
+        "en": "Shampoo",
+        "unified": "Other"
+    },
+    "Բալզամ, կոնդիցիոներ": {
+        "en": "Balm, conditioner",
+        "unified": "Other"
+    },
+    "Ինտիմ հիգիենա": {
+        "en": "Intimate hygiene",
+        "unified": "Other"
+    },
+    "Չոր օճառ": {
+        "en": "Dry soap",
+        "unified": "Other"
+    },
+    "Հեղուկ օճառ": {
+        "en": "Liquid soap",
+        "unified": "Other"
+    },
+    "Լոգանքի գել, սպունգ": {
+        "en": "Bath gel, sponge",
+        "unified": "Other"
+    },
+    "Բամբակյա արտադրանք": {
+        "en": "Cotton products",
+        "unified": "Other"
+    },
+    "Մազի դիմակ, խնամքի միջոց": {
+        "en": "Hair mask, care product",
+        "unified": "Other"
+    },
+    "Մազի ներկ": {
+        "en": "Hair dye",
+        "unified": "Other"
+    },
+    "Մազի պարագա": {
+        "en": "Hair accessories",
+        "unified": "Other"
+    },
+    "Աչքի կոսմետիկա": {
+        "en": "Eye cosmetics",
+        "unified": "Other"
+    },
+    "Դեմքի խնամք": {
+        "en": "Facial care",
+        "unified": "Other"
+    },
+    "Շրթներկ": {
+        "en": "Lipstick",
+        "unified": "Other"
+    },
+    "Ձեռքի խնամք": {
+        "en": "Hand care",
+        "unified": "Other"
+    },
+    "Դեմքի կոսմետիկա": {
+        "en": "Facial cosmetics",
+        "unified": "Other"
+    },
+    "Ոտքի խնամք": {
+        "en": "Foot care",
+        "unified": "Other"
+    },
+    "Մարմնի խնամք": {
+        "en": "Body care",
+        "unified": "Other"
+    },
+    "Ձեռքի, ոտքի խնամքի պարագա": {
+        "en": "Hand and foot care accessories",
+        "unified": "Other"
+    },
+    "Ատամի մածուկ": {
+        "en": "Toothpaste",
+        "unified": "Other"
+    },
+    "Ողողման հեղուկ": {
+        "en": "Flushing liquid",
+        "unified": "Other"
+    },
+    "Ատամի խոզանակ": {
+        "en": "Toothbrush",
+        "unified": "Other"
+    },
+    "Ատամի չոփ, ատամի թել, շնչառությունը թարմացնող շերտեր": {
+        "en": "Toothpick, dental floss, breath freshener strips",
+        "unified": "Other"
+    },
+    "Սափրող սարք": {
+        "en": "Shaving device",
+        "unified": "Other"
+    },
+    "Սափրող սարքի գլխիկ": {
+        "en": "Shaver head",
+        "unified": "Other"
+    },
+    "Փրփուր, գել սափրվելու համար": {
+        "en": "Foam, gel for shaving",
+        "unified": "Other"
+    },
+    "Բալզամ, լոսյոն սափրվելուց հետո": {
+        "en": "Balm, lotion after shaving",
+        "unified": "Other"
+    },
+    "Դեպիլյացիայի կրեմ": {
+        "en": "Depilatory cream",
+        "unified": "Other"
+    },
+    "Հակաքրտինքային միջոց": {
+        "en": "Antiperspirant",
+        "unified": "Other"
+    },
+    "Հոտազերծիչ": {
+        "en": "Deodorant",
+        "unified": "Other"
+    },
+    "Տակդիր, խոնավ անձեռոցիկ": {
+        "en": "A wet wipe",
+        "unified": "Other"
+    },
+    "Մազի պարագա, աքսեսուար": {
+        "en": "Hair accessory, accessory",
+        "unified": "Other"
+    },
+    "Սպասքի համար": {
+        "en": "For dishes",
+        "unified": "Other"
+    },
+    "Լվացքի համար": {
+        "en": "For washing",
+        "unified": "Other"
+    },
+    "Ատամի մածուկ, խոզանակ": {
+        "en": "Toothpaste, brush",
+        "unified": "Other"
+    },
+    "Կոսմետիկա, եղունգի խնամք": {
+        "en": "Cosmetics, nail care",
+        "unified": "Other"
+    },
+    "Լոսյոն, յուղ, տալկ": {
+        "en": "Lotion, oil, talc",
+        "unified": "Other"
+    },
+    "Օճառ": {
+        "en": "Soap",
+        "unified": "Other"
+    },
+    "Շամպուն, գել": {
+        "en": "Shampoo, gel",
+        "unified": "Other"
+    },
+    "Անձեռոցիկ չոր": {
+        "en": "Towel dry",
+        "unified": "Other"
+    },
+    "Անձեռոցիկ խոնավ": {
+        "en": "Napkin wet",
+        "unified": "Other"
+    },
+    "Թղթյա արտադրանք": {
+        "en": "Paper products",
+        "unified": "Other"
+    },
+    "Զուգագուլպա, երկար կիսազուգագուլպա": {
+        "en": "Tights, long half tights",
+        "unified": "Other"
+    },
+    "Տղամարդու ներքնազգեստ": {
+        "en": "Men's underwear",
+        "unified": "Other"
+    },
+    "Կանացի ներքնազգեստ": {
+        "en": "Women's underwear",
+        "unified": "Other"
+    },
+    "Մանկական գալանտերեա": {
+        "en": "Children's haberdashery",
+        "unified": "Other"
+    },
+    "Գուլպա, կիսազուգագուլպա": {
+        "en": "Stocking, pantyhose",
+        "unified": "Other"
+    },
+    "Հողաթափ": {
+        "en": "Landslide",
+        "unified": "Other"
+    },
+    "Սփռոց, սրբիչ": {
+        "en": "Tablecloth, towel",
+        "unified": "Other"
+    },
+    "Անձրևանոց-թիկնոց, պայուսակ, ծածկոց": {
+        "en": "Raincoat-cloak, bag, blanket",
+        "unified": "Other"
+    },
+    "Խաղալիք նորածինների համար": {
+        "en": "Toy for babies",
+        "unified": "Other"
+    },
+    "Խաղալիք աղջիկների համար": {
+        "en": "Toy for girls",
+        "unified": "Other"
+    },
+    "Խաղալիք տղաների համար": {
+        "en": "Toy for boys",
+        "unified": "Other"
+    },
+    "Փափուկ խաղալիք": {
+        "en": "A soft toy",
+        "unified": "Other"
+    },
+    "Սպորտային, զինվորական խաղալիքներ": {
+        "en": "Sports, military toys",
+        "unified": "Other"
+    },
+    "Երաժշտական խաղալիքներ": {
+        "en": "Musical toys",
+        "unified": "Other"
+    },
+    "Սեղանի խաղեր": {
+        "en": "Board games",
+        "unified": "Other"
+    },
+    "Ճանաչողական, ինտելեկտուալ խաղ": {
+        "en": "Cognitive, intellectual game",
+        "unified": "Other"
+    },
+    "Ջրային ատրճանակ, խաղալիքի հավաքածու": {
+        "en": "Water gun, toy set",
+        "unified": "Beverages"
+    },
+    "Պայուսակ, գրչատուփ": {
+        "en": "Bag, pencil case",
+        "unified": "Other"
+    },
+    "Գրիչ": {
+        "en": "Pen",
+        "unified": "Other"
+    },
+    "Տետր, օրագիր, թղթապանակ": {
+        "en": "Notebook, diary, folder",
+        "unified": "Other"
+    },
+    "Գրչատուփ, հավաքածու": {
+        "en": "Pen case, set",
+        "unified": "Other"
+    },
+    "Գծագրության պարագա և հաշվիչ": {
+        "en": "Drawing tool and calculator",
+        "unified": "Other"
+    },
+    "Սրիչ, ռետին, շտկիչ, սոսինձ": {
+        "en": "Sharpener, eraser, corrector, glue",
+        "unified": "Other"
+    },
+    "Թուղթ գունավոր, պլաստիլին, մկրատ": {
+        "en": "Colored paper, plasticine, scissors",
+        "unified": "Other"
+    },
+    "Նկարչության համար": {
+        "en": "For drawing",
+        "unified": "Other"
+    },
+    "Ամսագիր": {
+        "en": "Magazine",
+        "unified": "Other"
+    },
+    "Գիրք": {
+        "en": "Book",
+        "unified": "Other"
+    },
+    "Խաչբառ": {
+        "en": "Crossword",
+        "unified": "Other"
+    },
+    "Ծաղիկ": {
+        "en": "A flower",
+        "unified": "Other"
+    },
+    "Նվեր": {
+        "en": "A gift",
+        "unified": "Other"
+    },
+    "Սեղանի պարագա": {
+        "en": "Tableware",
+        "unified": "Other"
+    },
+    "Խոհանոցային պարագա": {
+        "en": "Kitchen utensil",
+        "unified": "Other"
+    },
+    "Մեկանգամյա օգտագործման սպասք": {
+        "en": "Disposable tableware",
+        "unified": "Other"
+    },
+    "Պլաստմասե  սպասք": {
+        "en": "Plastic dishes",
+        "unified": "Other"
+    },
+    "Մոմ և հրավառություն": {
+        "en": "Candles and fireworks",
+        "unified": "Other"
+    },
+    "Ճայթռուկ": {
+        "en": "A firecracker",
+        "unified": "Other"
+    },
+    "Տոնական զարդարանք, պիկնիկ": {
+        "en": "Festive decoration, picnic",
+        "unified": "Other"
+    },
+    "Համակարգչային տեխնիկա, աքսեսուար": {
+        "en": "Computer equipment, accessories",
+        "unified": "Other"
+    },
+    "Էլեկտրական սարքավորում": {
+        "en": "Electrical equipment",
+        "unified": "Other"
+    },
+    "Մարտկոց": {
+        "en": "Battery:",
+        "unified": "Other"
+    },
+    "Լամպ, վարդակ, երկարացման լար, անջատիչ": {
+        "en": "Bulb, socket, extension cord, switch",
+        "unified": "Other"
+    },
+    "Տոնածառի խաղալիքներ": {
+        "en": "Christmas tree toys",
+        "unified": "Other"
+    },
+    "Ամանորյա դեկորացիա": {
+        "en": "Christmas decoration",
+        "unified": "Other"
+    },
+    "Տոնածառ": {
+        "en": "Christmas tree",
+        "unified": "Other"
+    },
+    "Ամանորյա կոմպոզիցիաներ": {
+        "en": "Christmas compositions",
+        "unified": "Other"
+    },
+    "Ամանորյա հանդերձանք": {
+        "en": "Christmas outfit",
+        "unified": "Other"
+    },
+    "Սեղանի ձևավորման պարագաներ": {
+        "en": "Table decoration accessories",
+        "unified": "Other"
+    },
+    "Սննդամթերք": {
+        "en": "Food",
+        "unified": "Other"
+    },
+    "Տնտեսական ապրանքներ": {
+        "en": "Economical products",
+        "unified": "Other"
+    },
+    "Масло сливочное \"Лурпак\" 82% 200г": {
+        "en": "Butter \"Lurpak\" 82% 200g",
+        "unified": "Other"
+    },
+    "Coca-Cola": {
+        "en": "Coca-Cola",
+        "unified": "Other"
+    },
+    "Coca-Cola Zero": {
+        "en": "Coca-Cola Zero",
+        "unified": "Other"
+    },
+    "Նվերներ, նվերի աքսեսուարներ": {
+        "en": "Gifts, gift accessories",
+        "unified": "Other"
+    },
+    "Ալկոհոլային խմիչքներ": {
+        "en": "Alcoholic drinks",
+        "unified": "Beverages"
+    },
+    "Հացաբուլկեղեն և հրուշակեղեն": {
+        "en": "Bakery and confectionery",
+        "unified": "Bakery"
+    },
+    "Կաթնամթերք, պաղպաղակ և սառույց": {
+        "en": "Dairy products, ice cream and ice",
+        "unified": "Dairy & Eggs"
+    },
+    "Երշիկ և խորտիկներ": {
+        "en": "Sausage and snacks",
+        "unified": "Snacks"
+    },
+    "Պատրաստի ուտեստ": {
+        "en": "Ready dish",
+        "unified": "Other"
+    },
+    "Թռչնամիս և ձու": {
+        "en": "Poultry and eggs",
+        "unified": "Other"
+    },
+    "Կիսաֆաբրիկատներ": {
+        "en": "Semi-finished products",
+        "unified": "Other"
+    },
+    "Ձուկ և ծովամթերք": {
+        "en": "Fish and seafood",
+        "unified": "Other"
+    },
+    "Կենդանի և թարմ ձուկ": {
+        "en": "Live and fresh fish",
+        "unified": "Other"
+    },
+    "Թարմ միրգ և բանջարեղեն": {
+        "en": "Fresh fruit and vegetables",
+        "unified": "Fruits & Vegetables"
+    },
+    "Տաք ըմպելիքներ": {
+        "en": "Hot drinks",
+        "unified": "Beverages"
+    },
+    "Չիպսեր, սերմեր և եգիպտացորեն": {
+        "en": "Chips, seeds and corn",
+        "unified": "Snacks"
+    },
+    "Ոչ ալկոհոլային ըմպելիքներ": {
+        "en": "Non-alcoholic beverages",
+        "unified": "Beverages"
+    },
+    "Դիետիկ, առանց գլյուտեն և բիո սննդամթերք": {
+        "en": "Diet, gluten-free and organic food",
+        "unified": "Other"
+    },
+    "Ծխախոտային արտադրանք և աքսեսուարներ": {
+        "en": "Tobacco products and accessories",
+        "unified": "Other"
+    },
+    "Հիգիենա": {
+        "en": "Hygiene",
+        "unified": "Other"
+    },
+    "Կենցաղային քիմիա": {
+        "en": "Household chemistry",
+        "unified": "Other"
+    },
+    "Կենցաղային պարագաներ": {
+        "en": "Household items",
+        "unified": "Other"
+    },
+    "Կոսմետիկա և պարֆումերիա": {
+        "en": "Cosmetics and perfumery",
+        "unified": "Other"
+    },
+    "Խաղալիքներ": {
+        "en": "Toys",
+        "unified": "Other"
+    },
+    "Սպասք և խոհանոցային պարագաներ": {
+        "en": "Dishes and kitchen utensils",
+        "unified": "Other"
+    },
+    "Հուշանվերներ": {
+        "en": "Souvenirs",
+        "unified": "Other"
+    },
+    "Մանկական բաժին": {
+        "en": "Children's department",
+        "unified": "Other"
+    },
+    "Գրենական պիտույքներ": {
+        "en": "Stationery",
+        "unified": "Other"
+    },
+    "Տեքստիլ, հագուստ և կոշիկի խնամք": {
+        "en": "Textile, clothing and shoe care",
+        "unified": "Other"
+    },
+    "Ամեն ինչ տոների համար": {
+        "en": "Everything for the holidays",
+        "unified": "Other"
+    },
+    "Էլեկտրատեխնիկա": {
+        "en": "Electrical engineering",
+        "unified": "Other"
+    },
+    "Համակարգչային աքսեսուարներ": {
+        "en": "Computer accessories",
+        "unified": "Other"
+    },
+    "Զբոսաշրջիկ, ամառանոցավար": {
+        "en": "Tourist, summer housekeeper",
+        "unified": "Other"
+    },
+    "Ամեն ինչ բույսերի համար": {
+        "en": "Everything for plants",
+        "unified": "Other"
+    },
+    "Սպորտային ապրանքներ": {
+        "en": "Sports goods",
+        "unified": "Other"
+    },
+    "Շին․գործիքներ և Էլեկտրասարքավորում": {
+        "en": "Building: Tools and Electrical Equipment",
+        "unified": "Other"
+    },
+    "Վիսկի կուպաժավորված": {
+        "en": "Blended whiskey",
+        "unified": "Other"
+    },
+    "Վիսկի մեկ ածիկային": {
+        "en": "Whiskey single malt",
+        "unified": "Other"
+    },
+    "Բուրբոն": {
+        "en": "Bourbon",
+        "unified": "Other"
+    },
+    "Կոնյակ և Բրենդի": {
+        "en": "Brandy and brandy",
+        "unified": "Other"
+    },
+    "Կոնյակ, Բրենդի հայկական": {
+        "en": "Cognac, Brand Armenian",
+        "unified": "Other"
+    },
+    "Կոնյակ, Բրենդի ներմուծված": {
+        "en": "Cognac, brand imported",
+        "unified": "Other"
+    },
+    "Օղի և Թուրմեր": {
+        "en": "Vodka and Tinctures",
+        "unified": "Other"
+    },
+    "Օղի ներմուծված": {
+        "en": "Vodka imported",
+        "unified": "Other"
+    },
+    "Օղի հայկական": {
+        "en": "Vodka Armenian",
+        "unified": "Other"
+    },
+    "Օղի ռուսական": {
+        "en": "Russian vodka",
+        "unified": "Other"
+    },
+    "Թուրմ": {
+        "en": "Tincture",
+        "unified": "Other"
+    },
+    "Գարեջուր, սիդր և կոկտեյլ": {
+        "en": "Beer, cider and cocktail",
+        "unified": "Other"
+    },
+    "Գարեջուր ներմուծված": {
+        "en": "Beer imported",
+        "unified": "Other"
+    },
+    "Գարեջուր հայկական": {
+        "en": "Armenian beer",
+        "unified": "Other"
+    },
+    "Կոկտեյլ և Սիդր": {
+        "en": "Cocktail and Cider",
+        "unified": "Other"
+    },
+    "Ալկոհոլ մինի շշերով": {
+        "en": "Alcohol in mini bottles",
+        "unified": "Other"
+    },
+    "Ջին, լիկյոր, ռոմ, տեկիլա մինի շշերով": {
+        "en": "Gin, liqueur, rum, tequila in mini bottles",
+        "unified": "Other"
+    },
+    "Գինի, փրփրուն գինի մինի շշերով": {
+        "en": "Wine, sparkling wine in mini bottles",
+        "unified": "Other"
+    },
+    "Վիսկի, օղի, կոնյակ մինի շշերով": {
+        "en": "Whiskey, vodka, brandy in mini bottles",
+        "unified": "Other"
+    },
+    "Տեկիլա, աբսենտ, ռոմ, լիկյոր և ջին": {
+        "en": "Tequila, absinthe, rum, liqueur and gin",
+        "unified": "Other"
+    },
+    "Տեկիլա": {
+        "en": "Tequila",
+        "unified": "Other"
+    },
+    "Ռոմ": {
+        "en": "Rom",
+        "unified": "Other"
+    },
+    "Ջին": {
+        "en": "Gin",
+        "unified": "Other"
+    },
+    "Աբսենտ": {
+        "en": "Absinthe",
+        "unified": "Other"
+    },
+    "Գինի, Վերմուտ, Փրփրուն գինի": {
+        "en": "Wine, Vermouth, Sparkling wine",
+        "unified": "Other"
+    },
+    "Փրփրուն գինի, Շամպայն": {
+        "en": "Sparkling wine, Champagne",
+        "unified": "Other"
+    },
+    "Հավաքածուներ և հուշանվերային շշեր": {
+        "en": "Collections and souvenir bottles",
+        "unified": "Other"
+    }
+}

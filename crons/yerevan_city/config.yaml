@@ -1,0 +1,5 @@
+name: "yerevan_city_scraper"
+schedule: "0 0 * * *" # Daily at midnight
+enabled: true
+base_url: "https://yerevan-city.am"
+output_dir: "./data"

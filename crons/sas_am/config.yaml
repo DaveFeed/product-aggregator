@@ -1,0 +1,5 @@
+name: "sas_am_scraper"
+schedule: "0 0 * * *" # Daily at midnight
+enabled: true
+base_url: "https://www.sas.am"
+output_dir: "./data"

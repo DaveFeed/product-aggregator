@@ -1,0 +1,25 @@
+Starting scrape for https://yerevan-city.am
+Navigating to https://yerevan-city.am/shop/categories to find categories...
+Found 69 categories.
+[1/69] Scraping category: Ալկոհոլային խմիչքներ (https://yerevan-city.am/shop/products/4)
+  Loading products via infinite scroll...
+  Scroll 1: Found 42 products
+  Scroll 2: Found 72 products
+  Scroll 3: Found 102 products
+  Scroll 4: Found 102 products
+  No new products loaded, finishing category.
+  Scraping 102 products...
+    Scraped 50/102 products...
+    Scraped 100/102 products...
+Finished category Ալկոհոլային խմիչքներ. Total products: 102
+[2/69] Scraping category: Հացաբուլկեղեն և հրուշակեղեն (https://yerevan-city.am/shop/products/1923)
+  Loading products via infinite scroll...
+  Scroll 1: Found 37 products
+  Scroll 2: Found 67 products
+  Scroll 3: Found 97 products
+  Scroll 4: Found 127 products
+  Scroll 5: Found 157 products
+  Scroll 6: Found 187 products
+Global error: page.$$eval: Target page, context or browser has been closed
+page.$$eval: Target page, context or browser has been closed
+    at scrape (/home/codeex/Projects/product-aggregator/crons/yerevan_city/job.js:168:48)

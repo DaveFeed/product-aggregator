@@ -1,0 +1,24 @@
+FROM golang:alpine
+
+# Install git to clone
+RUN apk add --no-cache git
+
+WORKDIR /app
+
+# Clone the repo
+RUN git clone https://github.com/ismalzikri/free-translate-api.git .
+
+# Patch to listen on 0.0.0.0
+# Assuming the code has "localhost:8000" or similar. 
+# We'll replace ":8000" with ":8000" (no-op) but careful replacer.
+# Better: replace "localhost:8000" with ":8000"
+RUN sed -i 's/localhost:8000/:8000/g' main.go
+
+# Build
+RUN go build -o main .
+
+# Expose port
+EXPOSE 8000
+
+# Run
+CMD ["./main"]

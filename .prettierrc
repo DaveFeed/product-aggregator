@@ -1,0 +1,15 @@
+{
+    "semi": true,
+    "printWidth": 120,
+    "tabWidth": 4,
+    "checkIgnorePragma": true,
+    "endOfLine": "lf",
+    "overrides": [
+        {
+            "files": ["*.yml", "*.yaml", "*.json"],
+            "options": {
+                "trailingComma": "none"
+            }
+        }
+    ]
+}

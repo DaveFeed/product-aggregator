@@ -137,3 +137,18 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+package-lock.json
+
+# Data files
+data/*.json
+!data/unified_categories.json
+!data/category_mapping.json
+!data/translation_cache.json
+products_all.json
+products_*.json
+normalized_db.json
+
+# Keep logs
+!logs/
+!*.log
