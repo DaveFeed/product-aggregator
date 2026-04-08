@@ -1,75 +1,52 @@
 const { Scenes, Markup } = require("telegraf");
-const Product = require("../../models/Product");
-const Provider = require("../../models/Provider");
-const { formatPrice } = require("../utils");
-
-let extractor = null;
+const { formatPrice, escapeMarkdown } = require("../utils");
 
 const searchScene = new Scenes.WizardScene(
     "search",
     async (ctx) => {
-        await ctx.reply("Please enter the product name you are looking for:", Markup.keyboard([["🔙 Back"]]).resize());
+        await ctx.reply(
+            "Please enter the product name you are looking for in english:",
+            Markup.keyboard([["🔙 Back"]]).resize()
+        );
         return ctx.wizard.next();
     },
     async (ctx) => {
         const text = ctx.message.text;
 
         if (!text) {
-            return ctx.reply("Please send text.");
+            return ctx.reply("Your input should be a text in english:");
         }
 
         await ctx.reply(`🔍 Searching for "${text}"...`);
 
         try {
-            // Lazy load model
-            if (!extractor) {
-                // Initialize extractor with Multilingual model
-                const { pipeline } = await import("@xenova/transformers");
-                extractor = await pipeline("feature-extraction", "Xenova/paraphrase-multilingual-MiniLM-L12-v2");
-            }
+            // lazy load to avoid circular dependency
+            const SearchService = require("../../services/SearchService");
+            const results = await SearchService.search(text);
 
-            // Generate embedding
-            const output = await extractor(text, { pooling: "mean", normalize: true });
-            const queryVector = JSON.stringify(Array.from(output.data));
-
-            // Vector search: Cosine distance (<=>)
-            // Limit to top 20 relevant results across all providers
-            // Threshold: 0.6 (0 is identical, 1 is orthogonal)
-            const products = await Product.query()
-                .select("*", Product.knex().raw("embedding <=> ? as distance", [queryVector]))
-                .whereNotNull("embedding")
-                .where(Product.knex().raw("embedding <=> ? < 0.6", [queryVector]))
-                .orderByRaw("embedding <=> ? ASC", [queryVector])
-                .limit(15)
-                .withGraphFetched("provider");
-
-            if (products.length === 0) {
+            if (results.length === 0) {
                 await ctx.reply("No matches found.");
             } else {
-                let message = `Results for "${text}":\n\n`;
+                let message = `Results for "${escapeMarkdown(text)}":\n\n`;
 
-                // Grouping by provider might be nice, but for semantic search, relevance is key.
-                // Let's show listing with Provider tag.
-                // Also distinct by title? Sometimes same product in duplicates.
-                // Let's just list top 10 distinct-ish items or just all 20? 20 is a lot for one message.
-                // Let's show top 15.
+                results.forEach((p) => {
+                    const price = escapeMarkdown(formatPrice(p.price));
+                    const providerName = escapeMarkdown(p.provider_name || "Unknown");
+                    const reason = p.match_reason ? `\n_💡 ${escapeMarkdown(p.match_reason)}_` : "";
 
-                const topProducts = products.slice(0, 15);
+                    const safeTitle = escapeMarkdown(p.title);
 
-                topProducts.forEach((p) => {
-                    const price = formatPrice(p.price);
-                    const providerName = p.provider ? p.provider.display_name : "Unknown";
-                    // E.g. [SAS] Apple - 500 AMD
-                    message += `*${providerName}*\n[${p.title}](${p.fetch_url}) - *${price}*\n\n`;
+                    message += `*${providerName}*\n[${safeTitle}](${p.product_url}) \\- *${price}*${reason}\n\n`;
                 });
 
-                await ctx.replyWithMarkdown(message, {
+                await ctx.reply(message, {
                     disable_web_page_preview: true,
+                    parse_mode: "MarkdownV2",
                 });
             }
         } catch (err) {
             console.error("Search error:", err);
-            await ctx.reply("An error occurred during search.");
+            await ctx.reply("An error occurred during search. Please try again later.");
         }
     }
 );

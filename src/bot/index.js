@@ -5,9 +5,13 @@ const stage = require("./scenes");
 const setupBot = (botToken) => {
     const bot = new Telegraf(botToken);
 
-    // Middleware
+    // Middlewares
+    bot.use((ctx, next) => {
+        if (ctx?.from?.is_bot) return; // Ignore bot messages
+        return next();
+    });
     bot.use(session());
-    bot.use(require("./middleware/logger"));
+    bot.use(require("./middlewares/logger"));
     bot.use(stage.middleware());
 
     console.log("Registered Scenes:", stage && stage.scenes ? Array.from(stage.scenes.keys()) : "None");
@@ -27,7 +31,7 @@ const setupBot = (botToken) => {
                     first_name,
                     last_name,
                 });
-                ctx.reply(`Welcome ${first_name}! You have been registered.`);
+                ctx.reply(`Welcome ${first_name}!`);
             } else {
                 // ctx.reply(`Welcome back ${first_name}!`);
             }
@@ -44,23 +48,26 @@ const setupBot = (botToken) => {
     bot.hears("🔍 Search", (ctx) => ctx.scene.enter("search"));
     bot.hears("📋 Catalog", (ctx) => ctx.scene.enter("catalog"));
     bot.hears("⚙️ Settings", (ctx) => ctx.scene.enter("settings"));
-
-    bot.command("test", (ctx) => ctx.scene.enter("test_scene"));
-
-    bot.help((ctx) => ctx.reply("Send /start to register.\nSend /test to run DB verification scene."));
+    bot.hears("🔙 Back", (ctx) => ctx.scene.enter("home"));
+    bot.help((ctx) => {
+        ctx.reply("Todo: Help message");
+    });
 
     // Error Handling
     bot.catch((err, ctx) => {
         console.error(`Ooops, encountered an error for ${ctx.updateType}`, err);
-        // Try to notify user if possible
+
         try {
-            ctx.reply("Something went wrong. Please try again later.");
+            ctx.reply(
+                `Error occurred while processing your request, please provide this information to @davefeed\nMessage: \`${err.message}\`\nStack: \`\`\`${err.stack}\`\`\``,
+                {
+                    parse_mode: "Markdown",
+                }
+            );
         } catch (e) {
             console.error("Could not reply to user", e);
         }
-        // Do not crash the process
     });
-
     return bot;
 };
 

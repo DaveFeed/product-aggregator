@@ -23,9 +23,14 @@ async function generateEmbeddings() {
     console.log("Model loaded.");
 
     try {
-        const products = await Product.query().whereNull("embedding");
+        // User requested to redo embeddings on title texts.
+        // We will fetch ALL products.
+        // Or better, let's reset them first to be sure?
+        // Actually, just overwriting is fine.
+        console.log("Fetching ALL products to regenerate embeddings...");
+        const products = await Product.query(); // .whereNull("embedding") <--- Removed to force update
 
-        console.log(`Found ${products.length} products needing embeddings.`);
+        console.log(`Found ${products.length} products.`);
         if (products.length === 0) {
             console.log("Nothing to do.");
             process.exit(0);
@@ -37,17 +42,17 @@ async function generateEmbeddings() {
                 `Processing batch ${Math.ceil((i + 1) / BATCH_SIZE)}/${Math.ceil(products.length / BATCH_SIZE)}...`
             );
 
-            // Process serially or in parallel? Parallel might block event loop if not threaded.
-            // Transformers.js in Node (onnxruntime) is reasonably fast but CPU bound.
-            // Let's loop items in batch.
-
             for (let j = 0; j < batch.length; j++) {
                 const product = batch[j];
-                const text = (product.title || "").replace(/\n/g, " ");
+                // "redo the embedings on title texts" - Ensure we use title.
+                // Currently it uses product.title.
+                const text = (product.title || "").trim().replace(/\n/g, " ");
+
+                if (!text) continue;
 
                 // Generate embedding
                 const output = await extractor(text, { pooling: "mean", normalize: true });
-                const embedding = Array.from(output.data); // Float32Array to Array
+                const embedding = Array.from(output.data);
 
                 const vectorString = JSON.stringify(embedding);
 
@@ -62,7 +67,7 @@ async function generateEmbeddings() {
             await new Promise((r) => setTimeout(r, 100));
         }
 
-        console.log("Done generating embeddings.");
+        console.log("Done regenerating embeddings.");
         process.exit(0);
     } catch (err) {
         console.error("Global error:", err);

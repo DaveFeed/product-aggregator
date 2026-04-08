@@ -7,13 +7,12 @@ const Message = require("../../models/Message");
  * @param {Function} next
  */
 const loggerMiddleware = async (ctx, next) => {
-    // Only process if we have a from object (user interaction)
     if (ctx.from) {
-        const { id, username, first_name, last_name, language_code, is_bot } = ctx.from;
+        const { id, username, first_name, last_name, language_code } = ctx.from;
         const telegram_id = id.toString();
 
         try {
-            // Upsert User
+            // todo:: (optimize) have a caching layer to reduce DB hits for known users
             let user = await User.query().findOne({ telegram_id });
             const now = new Date().toISOString();
 
@@ -23,8 +22,6 @@ const loggerMiddleware = async (ctx, next) => {
                 first_name,
                 last_name,
                 language_code,
-                is_bot,
-                // Store raw user data as metadata for future proofing
                 metadata: { ...ctx.from },
                 updated_at: now,
             };
@@ -38,7 +35,6 @@ const loggerMiddleware = async (ctx, next) => {
                 await User.query().patch(userData).where("id", user.id);
             }
 
-            // Log Message if text or caption exists
             const messageText = ctx.message?.text || ctx.message?.caption || ctx.callbackQuery?.data;
             const messageType = ctx.message?.sticker
                 ? "sticker"
@@ -49,6 +45,8 @@ const loggerMiddleware = async (ctx, next) => {
                 : ctx.callbackQuery
                 ? "callback_query"
                 : "text";
+
+            console.log(`Logged message from user ${telegram_id} (${messageType}): ${messageText}`);
 
             if (messageText || messageType) {
                 await Message.query().insert({
@@ -65,7 +63,6 @@ const loggerMiddleware = async (ctx, next) => {
             }
         } catch (error) {
             console.error("Logger Middleware Error:", error);
-            // Don't block execution if logging fails
         }
     }
 

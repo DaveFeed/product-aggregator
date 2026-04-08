@@ -46,7 +46,13 @@ const createCatalogKeyboard = (page, totalPages, categoryId) => {
     return [navRow, actionRow];
 };
 
+const escapeMarkdown = (text) => {
+    if (!text) return "";
+    return String(text).replace(/[_*[\]()~`>#+\-=|{}.!]/g, "\\$&");
+};
+
 module.exports = {
     formatPrice,
     createCatalogKeyboard,
+    escapeMarkdown,
 };
