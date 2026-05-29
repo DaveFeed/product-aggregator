@@ -4,18 +4,27 @@ const path = require("path");
 
 const BASE_URL = "https://www.carrefour.am";
 
+function extractUnitFromTitle(title) {
+    if (!title) return "";
+    const matches = [
+        ...title.matchAll(/(\d+(?:[.,]\d+)?)\s*(kg|g|pcs|piece|l|ml|կգ|գ|լ|մլ|հատ|кг|г|л|мл|шт)(?![\p{L}])/gimu),
+    ];
+    if (matches.length) return matches[matches.length - 1][0];
+    if (/\bkg\b/i.test(title)) return "per kg";
+    return "";
+}
+
 async function scrape() {
     const config = process.env.JOB_CONFIG
         ? JSON.parse(process.env.JOB_CONFIG)
-        : {
-              base_url: BASE_URL,
-              output_dir: "./data",
-          };
+        : { base_url: BASE_URL, output_dir: "./data" };
 
     const outputDir = path.resolve(config.output_dir || "./data");
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
-    }
+    if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+
+    const targetCategory = process.argv.find((a) => a.startsWith("--category="));
+    const limitArg = process.argv.find((a) => a.startsWith("--limit="));
+    const productLimit = limitArg ? parseInt(limitArg.split("=")[1], 10) : 0;
 
     console.log(`Starting scrape for ${BASE_URL}`);
 
@@ -26,86 +35,71 @@ async function scrape() {
     });
     const page = await context.newPage();
 
+    const stats = { productsScraped: 0, productsFailed: 0, priceParseFailed: 0 };
+
     try {
         console.log(`Navigating to ${BASE_URL}/en...`);
         await page.goto(`${BASE_URL}/en`);
         await page.waitForLoadState("domcontentloaded");
 
-        // 1. Get Main Categories
-        // Using nav menu or slider. Let's try to get from menu if possible, or common slider links.
-        // Selector for top nav items: ul.ui-menu > li.level0
-        // But subagent used slider. Let's try to find "Everyday Products" menu or links.
-        // Let's use a broad selector for category links that contain '/everyday-products/'
-
-        // Attempting to open menu or find visible links.
-        // Let's grab links from the main navigation "Everyday Products" if it exists, or just find all category links on home.
-        // A robust way mapping: a.category-item-link ? Or just hrefs.
-
-        // Subagent found links like: https://www.carrefour.am/en/everyday-products/meat-and-meat-products
-        // We can fetch all links starting with /en/everyday-products/ and filtering for depth.
-
-        // Let's grab all links on homepage and filter.
+        // Collect all /everyday-products/ links with depth 1 (one path segment after the prefix).
         const hrefs = await page.$$eval("a", (as) => as.map((a) => a.href));
-
-        // Filter for category-like URLs
-        // Typical pattern: /en/everyday-products/[category-slug]
-        // Avoid product links (usually have .html? or just deeper?)
-        // Actually Carrefour structure: /en/everyday-products/meat-and-meat-products
-        // Products: /en/everyday-products/meat-and-meat-products/pork-fillet-tgt-frozen-approx-500g.html (often ends in .html)
-
-        const categoryLinks = new Set();
+        const categoryUrls = new Set();
         hrefs.forEach((href) => {
-            if (href.includes("/everyday-products/") && !href.endsWith(".html")) {
-                // Determine depth
-                // Format: .../everyday-products/[category]
-                // We want to avoid .../everyday-products/[category]/[subcategory]
-                const relativePath = href.split("/everyday-products/")[1];
-                if (!relativePath) return; // Main page
-
-                // Check for slashes. If no slashes (or just trailing), it's depth 1.
-                // "meat-products" -> depth 1
-                // "meat-products/" -> depth 1
-                // "meat-products/pork" -> depth 2
-
-                const cleanPath = relativePath.replace(/\/$/, ""); // Remove trailing slash
-                if (!cleanPath.includes("/")) {
-                    categoryLinks.add(href);
-                }
-            }
+            if (!href.includes("/everyday-products/") || href.endsWith(".html")) return;
+            const rel = href.split("/everyday-products/")[1]?.replace(/\/$/, "");
+            if (rel && !rel.includes("/")) categoryUrls.add(href);
         });
 
-        const categories = Array.from(categoryLinks).map((url) => ({
-            url: url,
-            name: url.split("/").pop().replace(/-/g, " "), // naive name extraction
-        }));
+        // Skip navigational buckets that aren't real categories.
+        const NAVIGATIONAL = new Set(["promotions", "new-products", "exclusive-assortment"]);
 
-        console.log(`Found ${categories.length} potential categories.`);
+        // For each category, fetch the real display name from the page's <h1>.
+        const categories = [];
+        for (const url of Array.from(categoryUrls)) {
+            const slug = url.split("/").pop();
+            if (NAVIGATIONAL.has(slug)) continue;
+            let name = slug.replace(/-/g, " ");
+            try {
+                await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
+                const h1Text = await page.$eval("h1", (h) => h.textContent?.trim()).catch(() => "");
+                if (h1Text) name = h1Text;
+            } catch (e) {
+                console.warn(`  Could not fetch h1 for ${slug}: ${e.message}`);
+            }
+            categories.push({ url, slug, name });
+        }
+
+        console.log(`Found ${categories.length} categories.`);
+
+        let categoriesToScrape = categories;
+        if (targetCategory) {
+            const wanted = targetCategory.split("=")[1];
+            categoriesToScrape = categories.filter((c) => c.name === wanted || c.slug === wanted);
+            if (categoriesToScrape.length === 0) {
+                console.error(`Category '${wanted}' not found. Available: ${categories.map((c) => c.slug).join(", ")}`);
+                return;
+            }
+        }
 
         const allProducts = [];
-        const visitedUrls = new Set();
+        const seenProductUrls = new Set();
 
-        for (const cat of categories) {
-            if (visitedUrls.has(cat.url)) continue;
-            visitedUrls.add(cat.url);
-
+        for (const cat of categoriesToScrape) {
+            if (productLimit > 0 && stats.productsScraped >= productLimit) break;
             console.log(`Processing Category: ${cat.name} (${cat.url})`);
 
             try {
                 await page.goto(cat.url);
                 await page.waitForLoadState("domcontentloaded");
 
-                // Check for Subcategories?
-                // Carrefour might show products directly or subcats.
-                // If products present, scrape.
-                // Pagination loop
-
                 let hasNextPage = true;
                 let pageNum = 1;
 
                 while (hasNextPage) {
+                    if (productLimit > 0 && stats.productsScraped >= productLimit) break;
                     console.log(`  Scraping Page ${pageNum}...`);
 
-                    // Wait for products
                     try {
                         await page.waitForSelector("li.product-item", { timeout: 5000 });
                     } catch (e) {
@@ -117,48 +111,60 @@ async function scrape() {
                     console.log(`    Found ${items.length} items.`);
 
                     for (const item of items) {
+                        if (productLimit > 0 && stats.productsScraped >= productLimit) break;
                         try {
                             const titleEl = await item.$("a.product-item-link");
                             const title = titleEl ? (await titleEl.innerText()).trim() : "";
                             const url = titleEl ? await titleEl.getAttribute("href") : "";
+                            if (!title || !url) {
+                                stats.productsFailed++;
+                                continue;
+                            }
+                            if (seenProductUrls.has(url)) continue;
 
-                            const priceEl = await item.$(".price");
-                            const priceText = priceEl ? await priceEl.innerText() : "";
-                            // Price: "3 390 ֏"
-                            let price = priceText.replace(/[^\d.]/g, "").replace(/\./g, ""); // "3390"
-                            // Handle decimals if needed? usually int in AMD.
-                            // Wait, replace . if thousands separator? formatted like 3,390?
-                            // Subagent saw "3,390". So replace ",".
-                            // Let's just keep digits.
+                            // Price: .price element, e.g. "֏450" or "1,599 ֏". Keep digits + one dot
+                            // (decimal sep) but strip thousands separators (commas, spaces).
+                            const priceEl = await item.$(".price-box .price, .price");
+                            const priceText = priceEl ? (await priceEl.innerText()).trim() : "";
+                            let priceValue = null;
+                            if (priceText) {
+                                // Remove currency + whitespace + commas; preserve dot.
+                                const cleaned = priceText.replace(/[^\d.,]/g, "").replace(/,/g, "");
+                                const parsed = parseFloat(cleaned);
+                                if (!isNaN(parsed) && parsed > 0) priceValue = parsed;
+                            }
+                            if (priceValue == null) {
+                                stats.priceParseFailed++;
+                                continue;
+                            }
 
-                            const unitEl = await item.$(".price-unit-description");
-                            // e.g. "/ kg" or "/ pcs"
-                            let unitText = unitEl ? await unitEl.innerText() : "";
-                            let unit = unitText.replace("/", "").trim() || "1 pcs";
+                            // Unit — carrefour no longer exposes .price-unit-description on listings.
+                            // Derive from title.
+                            const unit = extractUnitFromTitle(title);
 
                             const imgEl = await item.$("a.product-item-photo img");
                             const img = imgEl ? await imgEl.getAttribute("src") : "";
 
-                            if (title && price && url) {
-                                allProducts.push({
-                                    category_name: cat.name,
-                                    category_url: cat.url,
-                                    title: title,
-                                    price: price,
-                                    unit: unit,
-                                    image_url: img,
-                                    product_url: url,
-                                    currency: "AMD",
-                                });
-                            }
-                        } catch (err) {}
+                            seenProductUrls.add(url);
+                            allProducts.push({
+                                category_name: cat.name,
+                                category_url: cat.url,
+                                category_slug: cat.slug,
+                                title,
+                                price: String(priceValue),
+                                unit,
+                                image_url: img || "",
+                                product_url: url,
+                                currency: "AMD",
+                            });
+                            stats.productsScraped++;
+                        } catch (err) {
+                            stats.productsFailed++;
+                        }
                     }
 
-                    // Check Next Page
                     const nextBtn = await page.$("a.action.next");
                     if (nextBtn) {
-                        // Check if next button is visible/enabled?
-                        // Usually exists if next page.
                         const nextUrl = await nextBtn.getAttribute("href");
                         if (nextUrl) {
                             await page.goto(nextUrl);
@@ -171,18 +177,21 @@ async function scrape() {
                         hasNextPage = false;
                     }
 
-                    // Safety break
-                    if (pageNum > 20) hasNextPage = false;
+                    if (pageNum > 50) hasNextPage = false; // safety
                 }
             } catch (e) {
                 console.error(`Error processing cat ${cat.name}: ${e.message}`);
             }
         }
 
-        // Save
-        const outputPath = path.join(outputDir, "products_carrefour_am.json");
+        const outputPath = path.join(
+            outputDir,
+            targetCategory ? `products_${targetCategory.split("=")[1]}.json` : "products_carrefour_am.json"
+        );
         fs.writeFileSync(outputPath, JSON.stringify(allProducts, null, 2), "utf-8");
-        console.log(`Scraped total ${allProducts.length} items. Saved to ${outputPath}`);
+        console.log(
+            `Scraped total ${allProducts.length} items (failed: ${stats.productsFailed}, price-parse-failed: ${stats.priceParseFailed}). Saved to ${outputPath}`
+        );
     } catch (err) {
         console.error(`Global error: ${err.message}`);
     } finally {
@@ -190,8 +199,6 @@ async function scrape() {
     }
 }
 
-if (require.main === module) {
-    scrape();
-}
+if (require.main === module) scrape();
 
 module.exports = scrape;

@@ -17,7 +17,7 @@ const logger = winston.createLogger({
     transports: [new winston.transports.Console(), new winston.transports.File({ filename: "runner.log" })],
 });
 
-const CRONS_DIR = path.join(__dirname, "crons");
+const CRONS_DIR = path.join(__dirname, "..", "crons");
 
 function loadJobs() {
     if (!fs.existsSync(CRONS_DIR)) {

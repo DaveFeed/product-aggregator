@@ -212,12 +212,15 @@ module.exports = {
     },
 
     getUnifiedCategory: function (translatedName) {
-        const lower = translatedName.toLowerCase();
+        if (!translatedName) return "Other";
+        const text = String(translatedName);
 
-        // Check against rules
+        // Word-boundary match so "ham" doesn't hit "hamar", "bar" doesn't hit "barometer" etc.
         for (const [unified, keywords] of Object.entries(this.rules)) {
-            if (keywords.some((k) => lower.includes(k))) {
-                return unified;
+            for (const k of keywords) {
+                const escaped = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                const re = new RegExp(`\\b${escaped}\\b|\\b${escaped}s\\b`, "i"); // allow simple plural
+                if (re.test(text)) return unified;
             }
         }
 

@@ -1,3 +1,9 @@
+/**
+ * @deprecated Replaced by integrated embedding in cmd/sync_db.js (Task 04).
+ * Embeddings are now computed automatically during sync.
+ * Use: npm run refresh (or cmd/sync_db.js --force-embeddings)
+ */
+
 const fs = require("fs");
 const path = require("path");
 

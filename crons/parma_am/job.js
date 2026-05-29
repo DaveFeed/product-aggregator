@@ -4,19 +4,36 @@ const path = require("path");
 
 const BASE_URL = "https://www.parma.am";
 
+function cleanCategoryName(raw) {
+    if (!raw) return "";
+    // Parma decorates subcategory links with a leading count badge inside the <a>:
+    // "143\n\nVegetables". Strip leading digits + whitespace (including newlines).
+    return raw.replace(/^\s*\d+\s+/s, "").replace(/\s+/g, " ").trim();
+}
+
+function extractUnitFromTitle(title) {
+    if (!title) return "";
+    // Prefer the last numeric-unit match — product size tends to trail the title.
+    const matches = [
+        ...title.matchAll(/(\d+(?:[.,]\d+)?)\s*(kg|g|pcs|l|ml|կգ|գ|լ|մլ|հատ|кг|г|л|мл|шт)(?![\p{L}])/gimu),
+    ];
+    if (matches.length) return matches[matches.length - 1][0];
+    // Heuristic: naked "kg" suffix — treat as per-kg pricing without a quantity
+    if (/\bkg\b/i.test(title) || /\s*կգ\b/i.test(title) || /\s*кг\b/i.test(title)) return "per kg";
+    return "";
+}
+
 async function scrape() {
-    // Load config
     const config = process.env.JOB_CONFIG
         ? JSON.parse(process.env.JOB_CONFIG)
-        : {
-              base_url: BASE_URL,
-              output_dir: "./data",
-          };
+        : { base_url: BASE_URL, output_dir: "./data" };
 
     const outputDir = path.resolve(config.output_dir || "./data");
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
-    }
+    if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+
+    const targetCategory = process.argv.find((arg) => arg.startsWith("--category="));
+    const limitArg = process.argv.find((a) => a.startsWith("--limit="));
+    const productLimit = limitArg ? parseInt(limitArg.split("=")[1], 10) : 0;
 
     console.log(`Starting scrape for ${BASE_URL}`);
 
@@ -27,63 +44,69 @@ async function scrape() {
     });
     const page = await context.newPage();
 
+    const stats = { productsScraped: 0, productsFailed: 0 };
+
     try {
         console.log(`Navigating to ${BASE_URL}/en to find categories...`);
         await page.goto(`${BASE_URL}/en`);
         await page.waitForLoadState("domcontentloaded");
 
-        // 1. Get Main Categories from Homepage
+        // Main categories
         const categoryLinks = await page.$$("a.popular--category-item");
         const categories = [];
-
         for (const link of categoryLinks) {
             let url = await link.getAttribute("href");
             const nameEl = await link.$(".popular--category-item-text");
-            const name = nameEl ? await nameEl.innerText() : await link.innerText();
-
-            if (url && !url.includes("javascript")) {
+            const rawName = nameEl ? await nameEl.innerText() : await link.innerText();
+            const name = cleanCategoryName(rawName);
+            if (url && !url.includes("javascript") && name) {
                 if (!url.startsWith("http")) url = BASE_URL + url;
-                categories.push({ name: name.trim(), url: url });
+                categories.push({ name, url });
             }
         }
         console.log(`Found ${categories.length} main categories.`);
 
-        const allProducts = [];
+        let mainCategoriesToScrape = categories;
+        if (targetCategory) {
+            const categoryName = targetCategory.split("=")[1];
+            console.log(`Filtering for category: ${categoryName}`);
+            mainCategoriesToScrape = categories.filter((c) => c.name === categoryName);
+            if (mainCategoriesToScrape.length === 0) {
+                console.error(`Category '${categoryName}' not found. Available: ${categories.map((c) => c.name).join(", ")}`);
+                return;
+            }
+        }
 
-        // 2. Iterate Main Categories
-        for (const mainCat of categories) {
+        const allProducts = [];
+        const seenProductUrls = new Set();
+
+        for (const mainCat of mainCategoriesToScrape) {
+            if (productLimit > 0 && stats.productsScraped >= productLimit) break;
             console.log(`Processing Main Category: ${mainCat.name} (${mainCat.url})`);
 
             try {
                 await page.goto(mainCat.url);
                 await page.waitForLoadState("domcontentloaded");
 
-                // 3. Find Sub-categories
                 const subCatLinks = await page.$$("a.menu_sections_item");
                 let subCategories = [];
 
                 for (const link of subCatLinks) {
                     let url = await link.getAttribute("href");
-                    const name = await link.innerText();
-                    if (url && !url.startsWith("http")) url = BASE_URL + url;
-                    subCategories.push({
-                        name: name.trim(),
-                        url: url,
-                        parent: mainCat.name,
-                    });
+                    const rawName = await link.innerText();
+                    const name = cleanCategoryName(rawName);
+                    if (!url || !name) continue;
+                    if (!url.startsWith("http")) url = BASE_URL + url;
+                    subCategories.push({ name, url, parent: mainCat.name });
                 }
 
                 if (subCategories.length === 0) {
-                    subCategories.push({
-                        name: mainCat.name,
-                        url: mainCat.url,
-                        parent: mainCat.name,
-                    });
+                    subCategories.push({ name: mainCat.name, url: mainCat.url, parent: mainCat.name });
                 }
-
                 console.log(`Found ${subCategories.length} sub-categories in ${mainCat.name}`);
 
                 for (const subCat of subCategories) {
+                    if (productLimit > 0 && stats.productsScraped >= productLimit) break;
                     console.log(`  Scraping Sub-category: ${subCat.name} (${subCat.url})`);
                     await page.goto(subCat.url);
                     await page.waitForLoadState("domcontentloaded");
@@ -95,17 +118,15 @@ async function scrape() {
                         continue;
                     }
 
-                    // 4. Scrape Products
                     let productElements = await page.$$("div.item-block");
-
                     if (productElements.length === 0) {
                         console.log("    'item-block' selector failed, trying fallback via product_image...");
                         productElements = await page.$$("a.product_image");
                     }
-
                     console.log(`    Found ${productElements.length} products.`);
 
                     for (const el of productElements) {
+                        if (productLimit > 0 && stats.productsScraped >= productLimit) break;
                         try {
                             let container = el;
                             const tagName = await el.evaluate((e) => e.tagName.toLowerCase());
@@ -114,7 +135,6 @@ async function scrape() {
                                 if (parent) container = parent;
                             }
 
-                            // Title
                             const nameLink = await container.$("a.item_name");
                             const title = nameLink ? (await nameLink.innerText()).trim() : "";
                             const productUrlRel = nameLink ? await nameLink.getAttribute("href") : "";
@@ -124,12 +144,12 @@ async function scrape() {
                                     : BASE_URL + productUrlRel
                                 : subCat.url;
 
-                            // Image
-                            let imgEl = await container.$("a.product_image img");
-                            if (!imgEl && tagName === "a") {
-                                imgEl = await container.$("img");
-                            }
+                            // Dedup across subcategories by product_url: same product often
+                            // appears in multiple subcategories on Parma.
+                            if (seenProductUrls.has(productUrl)) continue;
 
+                            let imgEl = await container.$("a.product_image img");
+                            if (!imgEl && tagName === "a") imgEl = await container.$("img");
                             let imageUrl = "";
                             if (imgEl) {
                                 imageUrl =
@@ -137,34 +157,42 @@ async function scrape() {
                                 if (imageUrl && !imageUrl.startsWith("http")) imageUrl = BASE_URL + imageUrl;
                             }
 
-                            // Price
                             const text = await container.innerText();
-                            let price = "N/A";
-                            let unit = "1 pcs";
-
+                            let price = null;
                             const priceMatch = text.match(/([\d,.\s]+)\s*֏/);
-                            if (priceMatch) {
-                                price = priceMatch[1].replace(/\s/g, "");
+                            if (priceMatch) price = priceMatch[1].replace(/[\s,]/g, "");
+                            if (!price || parseFloat(price) <= 0) {
+                                stats.productsFailed++;
+                                continue;
                             }
 
-                            const unitMatch = title.match(/(\d+(\.\d+)?)\s*(kg|g|pcs|l|ml|կգ|գ|լ|մլ|հատ)/i);
-                            if (unitMatch) {
-                                unit = unitMatch[0];
+                            const unit = extractUnitFromTitle(title);
+
+                            // Extract external product ID from URL slug suffix "_NNNNN"
+                            const extIdMatch = productUrl.match(/_(\d+)(?:$|[?#])/);
+                            const externalId = extIdMatch ? extIdMatch[1] : null;
+
+                            if (!title) {
+                                stats.productsFailed++;
+                                continue;
                             }
 
+                            seenProductUrls.add(productUrl);
                             allProducts.push({
                                 category_name: subCat.name,
                                 category_url: subCat.url,
                                 parent_category: mainCat.name,
-                                title: title,
-                                price: price,
-                                unit: unit,
+                                title,
+                                price,
+                                unit,
                                 image_url: imageUrl,
                                 product_url: productUrl,
+                                external_product_id: externalId,
                                 add_to_cart_selector: "",
                             });
+                            stats.productsScraped++;
                         } catch (err) {
-                            // ignore bad item
+                            stats.productsFailed++;
                         }
                     }
                 }
@@ -173,10 +201,14 @@ async function scrape() {
             }
         }
 
-        // Save
-        const outputPath = path.join(outputDir, "products_parma_am.json");
+        const outputPath = path.join(
+            outputDir,
+            targetCategory ? `products_${targetCategory.split("=")[1]}.json` : "products_parma_am.json"
+        );
         fs.writeFileSync(outputPath, JSON.stringify(allProducts, null, 2), "utf-8");
-        console.log(`Scraped total ${allProducts.length} items. Saved to ${outputPath}`);
+        console.log(
+            `Scraped total ${allProducts.length} items (failed: ${stats.productsFailed}, duplicates skipped: ${seenProductUrls.size - allProducts.length + stats.productsFailed}). Saved to ${outputPath}`
+        );
     } catch (err) {
         console.error(`Global error: ${err.message}`);
     } finally {
@@ -184,8 +216,6 @@ async function scrape() {
     }
 }
 
-if (require.main === module) {
-    scrape();
-}
+if (require.main === module) scrape();
 
 module.exports = scrape;

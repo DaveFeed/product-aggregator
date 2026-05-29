@@ -1,5 +1,5 @@
 const User = require("../../models/User");
-const Message = require("../../models/Message");
+const BotMessageLog = require("../../models/BotMessageLog");
 
 /**
  * Middleware to log messages and upsert user data.
@@ -49,7 +49,7 @@ const loggerMiddleware = async (ctx, next) => {
             console.log(`Logged message from user ${telegram_id} (${messageType}): ${messageText}`);
 
             if (messageText || messageType) {
-                await Message.query().insert({
+                await BotMessageLog.query().insert({
                     user_id: user.id,
                     type: messageType,
                     text: messageText,

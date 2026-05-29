@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 const BASE_URL = "https://www.sas.am";
+const ADD_TO_CART_SELECTOR = "button.addTocart";
 
 async function handleAgeVerification(page) {
     try {
@@ -10,7 +11,6 @@ async function handleAgeVerification(page) {
         if (yesButton && (await yesButton.isVisible())) {
             console.log("  Found age verification popup. Clicking 'Yes'...");
             await yesButton.click();
-            // Wait for it to disappear
             await page.waitForTimeout(500);
         }
     } catch (e) {
@@ -18,19 +18,27 @@ async function handleAgeVerification(page) {
     }
 }
 
+function parsePriceLine(line) {
+    // Example lines: "36 420 / 1 kg", "2 950 ֏", "1 200 / 1 pc"
+    const num = parseFloat((line.match(/([\d\s]+[.,]?\d*)/)?.[1] || "0").replace(/[\s,]/g, ""));
+    const lower = line.toLowerCase();
+    let kind = null;
+    if (/\/\s*1?\s*kg\b/.test(lower) || /kg\b/.test(lower)) kind = "per_kg";
+    else if (/\/\s*1?\s*pcs?\b|\/\s*1?\s*hat\b|\bpc\b|\bpcs\b|\bhat\b/.test(lower)) kind = "per_pc";
+    return { num, kind };
+}
+
 async function scrape() {
-    // Load config
     const config = process.env.JOB_CONFIG
         ? JSON.parse(process.env.JOB_CONFIG)
-        : {
-              base_url: BASE_URL,
-              output_dir: "./data",
-          };
+        : { base_url: BASE_URL, output_dir: "./data" };
 
     const outputDir = path.resolve(config.output_dir || "./data");
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
-    }
+    if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+
+    const targetCategory = process.argv.find((arg) => arg.startsWith("--category="));
+    const limitArg = process.argv.find((a) => a.startsWith("--limit="));
+    const productLimit = limitArg ? parseInt(limitArg.split("=")[1], 10) : 0;
 
     console.log(`Starting scrape for ${config.base_url}`);
 
@@ -41,12 +49,13 @@ async function scrape() {
     });
     const page = await context.newPage();
 
+    const stats = { productsScraped: 0, productsFailed: 0, priceParseFailed: 0 };
+
     try {
         console.log(`Navigating to ${BASE_URL}/en to find categories...`);
         await page.goto(`${BASE_URL}/en`);
         await page.waitForLoadState("domcontentloaded");
 
-        // Extract categories
         const categoryLinks = await page.$$("a.main-menu__link-level-3");
         const categories = [];
         const seenUrls = new Set();
@@ -54,22 +63,15 @@ async function scrape() {
         for (const link of categoryLinks) {
             let url = await link.getAttribute("href");
             const name = await link.textContent();
-
             if (url && !seenUrls.has(url)) {
-                if (!url.startsWith("http")) {
-                    url = BASE_URL + url;
-                }
-                categories.push({ name: name.trim(), url: url });
+                if (!url.startsWith("http")) url = BASE_URL + url;
+                categories.push({ name: name.trim(), url });
                 seenUrls.add(url);
             }
         }
-
         console.log(`Found ${categories.length} categories.`);
 
-        // Filter categories if argument provided
-        const targetCategory = process.argv.find((arg) => arg.startsWith("--category="));
         let categoriesToScrape = categories;
-
         if (targetCategory) {
             const categoryName = targetCategory.split("=")[1];
             console.log(`Filtering for category: ${categoryName}`);
@@ -100,6 +102,7 @@ async function scrape() {
             let categoryProductsCount = 0;
 
             while (true) {
+                if (productLimit > 0 && stats.productsScraped >= productLimit) break;
                 console.log(`  Scraping page ${pageNum}...`);
 
                 try {
@@ -116,18 +119,15 @@ async function scrape() {
                 const productLinks = await page.$$("a.product__cover-link");
                 console.log(`  Found ${productLinks.length} products on page ${pageNum}.`);
 
-                if (productLinks.length === 0) {
-                    break;
-                }
+                if (productLinks.length === 0) break;
 
                 for (const link of productLinks) {
+                    if (productLimit > 0 && stats.productsScraped >= productLimit) break;
+
                     try {
                         let productUrl = await link.getAttribute("href");
-                        if (productUrl && !productUrl.startsWith("http")) {
-                            productUrl = BASE_URL + productUrl;
-                        }
+                        if (productUrl && !productUrl.startsWith("http")) productUrl = BASE_URL + productUrl;
 
-                        // Find parent element
                         const parent = await link.evaluateHandle(
                             (el) => el.closest(".product") || el.closest(".product-item") || el.parentElement
                         );
@@ -136,99 +136,71 @@ async function scrape() {
                         const imageEl = await parent.$(".product__image");
                         let imageUrl = "";
                         if (imageEl) {
-                            imageUrl = await imageEl.getAttribute("data-src");
-                            if (!imageUrl) {
-                                imageUrl = await imageEl.getAttribute("src");
-                            }
-                            if (imageUrl && !imageUrl.startsWith("http")) {
-                                imageUrl = BASE_URL + imageUrl;
-                            }
+                            imageUrl = (await imageEl.getAttribute("data-src")) || (await imageEl.getAttribute("src")) || "";
+                            if (imageUrl && !imageUrl.startsWith("http")) imageUrl = BASE_URL + imageUrl;
                         }
 
                         // Title
                         const titleEl = await parent.$(".product__name");
-                        const title = titleEl ? await titleEl.innerText() : "Unknown";
+                        const title = titleEl ? (await titleEl.innerText()).trim() : "";
+                        if (!title) {
+                            stats.productsFailed++;
+                            continue;
+                        }
 
-                        // Price extraction with Dual Pricing support
-                        let price = "N/A";
-                        let unit = "";
-                        let pricingMetadata = {};
-
-                        // Try finding price element
+                        // Price parsing — clean pipeline instead of the old contradictory logic:
+                        //  1. Collect all price lines from the price container.
+                        //  2. Classify each as per_kg or per_pc.
+                        //  3. Prefer per_pc (pay price when both exist), fall back to per_kg, then raw.
+                        let displayPrice = null;
+                        const pricingMetadata = {};
                         const priceEl = await parent.$(".product__price, .price, .product-item__price");
                         if (priceEl) {
-                            let rawPrice = await priceEl.innerText();
-                            // Example formats:
-                            // "36 420 / 1 kg"
-                            // "2 950 ֏\n1 pcs"
-                            // "1200 / 1 kg\n100 / 1 pc" (Hypothetical dual display)
-
-                            const cleanPrice = (str) => parseFloat(str.replace(/[^\d.]/g, "") || "0");
-
-                            // Normalize text to single line for easier regex processing if needed, or split by line
+                            const rawPrice = await priceEl.innerText();
                             const lines = rawPrice
                                 .split("\n")
                                 .map((l) => l.trim())
                                 .filter((l) => l);
 
-                            lines.forEach((line) => {
-                                const lower = line.toLowerCase();
-                                const val = cleanPrice(line);
-
-                                if (lower.includes("kg")) {
-                                    pricingMetadata.per_kg = val;
-                                } else if (lower.includes("pc") || lower.includes("hat") || lower.includes("pcs")) {
-                                    pricingMetadata.per_pc = val;
-                                } else if (lower.includes("g") && !lower.includes("kg")) {
-                                    // Handle grams if necessary, normally mapped to weight
-                                }
-
-                                // Default logic: if we found a value and haven't set main price, use it
-                                // Or heuristic: 'per pc' is usually the pay price if present, else 'per kg'
-                                if (price === "N/A" && val > 0) {
-                                    price = val.toString(); // Store as string to match schema
-                                }
-                            });
-
-                            // Specific override: If both exist, we usually buy 'per pc' if it's a discrete item
-                            if (pricingMetadata.per_pc) {
-                                price = pricingMetadata.per_pc.toString();
-                            } else if (pricingMetadata.per_kg) {
-                                price = pricingMetadata.per_kg.toString();
+                            for (const line of lines) {
+                                const { num, kind } = parsePriceLine(line);
+                                if (num <= 0) continue;
+                                if (kind === "per_kg") pricingMetadata.per_kg = num;
+                                else if (kind === "per_pc") pricingMetadata.per_pc = num;
+                                else if (displayPrice == null) displayPrice = num;
                             }
+                            if (pricingMetadata.per_pc != null) displayPrice = pricingMetadata.per_pc;
+                            else if (pricingMetadata.per_kg != null) displayPrice = pricingMetadata.per_kg;
 
-                            // Fallback for simple "3000 AMD" without unit
-                            if (Object.keys(pricingMetadata).length === 0) {
-                                price = cleanPrice(rawPrice).toString();
+                            if (displayPrice == null) {
+                                // Fallback: strip everything but digits/decimal and try to parseFloat.
+                                const cleaned = rawPrice.replace(/[^\d.]/g, "");
+                                const n = parseFloat(cleaned);
+                                if (!isNaN(n) && n > 0) displayPrice = n;
                             }
                         }
+                        if (displayPrice == null || displayPrice <= 0) stats.priceParseFailed++;
 
-                        // Try finding unit element (for display unit)
+                        // Unit (display string, e.g. "1 kg")
+                        let unit = "";
                         const unitEl = await parent.$(".product__unit, .product-item__unit");
-                        if (unitEl) {
-                            unit = (await unitEl.innerText()).trim();
-                        }
-
-                        // Fallback: Parse text if selectors failed or price is 0
-                        if (!price || price === "0" || price === "N/A") {
-                            // ... existing fallback ...
-                        }
-
-                        // ... (detail page fallback logic can remain similar or be updated if strictly needed) ...
+                        if (unitEl) unit = (await unitEl.innerText()).trim();
 
                         allProducts.push({
                             category_name: category.name,
                             category_url: category.url,
-                            title: title.trim(),
-                            price: price,
-                            unit: unit,
+                            title,
+                            price: displayPrice != null ? String(displayPrice) : null,
+                            unit,
                             image_url: imageUrl,
                             product_url: productUrl,
-                            add_to_cart_selector: addToCartSelector,
-                            metadata: { pricing: pricingMetadata }, // Store dual pricing here
+                            add_to_cart_selector: ADD_TO_CART_SELECTOR,
+                            metadata: { pricing: pricingMetadata },
                         });
                         categoryProductsCount++;
+                        stats.productsScraped++;
                     } catch (e) {
+                        stats.productsFailed++;
                         console.error(`  Error scraping a product: ${e.message}`);
                     }
                 }
@@ -237,14 +209,11 @@ async function scrape() {
                 const nextButton = await page.$("a.pagination__arrow.pagination__arrow--right");
                 if (nextButton) {
                     try {
-                        // Check for age verification popup overlay before clicking next
                         await handleAgeVerification(page);
-
                         await nextButton.click();
                         await page.waitForLoadState("networkidle");
                         pageNum++;
                     } catch (e) {
-                        // One more try for overlay interference
                         console.log("  Click failed, retrying after checking popup...");
                         await handleAgeVerification(page);
                         try {
@@ -275,7 +244,9 @@ async function scrape() {
             targetCategory ? `products_${targetCategory.split("=")[1]}.json` : "products_sas.json"
         );
         fs.writeFileSync(finalOutputPath, JSON.stringify(allProducts, null, 2), "utf-8");
-        console.log(`Scraped total ${allProducts.length} products. Saved to ${finalOutputPath}`);
+        console.log(
+            `Scraped total ${allProducts.length} products (failed: ${stats.productsFailed}, price-parse-failed: ${stats.priceParseFailed}). Saved to ${finalOutputPath}`
+        );
     } catch (err) {
         console.error(`Global error: ${err.message}`);
     } finally {
@@ -283,8 +254,6 @@ async function scrape() {
     }
 }
 
-if (require.main === module) {
-    scrape();
-}
+if (require.main === module) scrape();
 
 module.exports = scrape;

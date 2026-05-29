@@ -1,0 +1,4 @@
+name: daily_recommendations
+schedule: "0 8 * * *"
+enabled: true
+description: Generate and push daily product recommendations to active users via Telegram
